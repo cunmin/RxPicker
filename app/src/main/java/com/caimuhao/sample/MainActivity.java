@@ -1,5 +1,6 @@
 package com.caimuhao.sample;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -13,9 +14,9 @@ import com.caimuhao.rxpicker.RxPicker;
 import com.caimuhao.rxpicker.bean.ImageItem;
 import com.caimuhao.rxpicker.widget.DividerGridItemDecoration;
 
-import io.reactivex.disposables.Disposable;
 import java.util.List;
 
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -65,5 +66,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
           });
     }
+  }
+
+  @Override
+  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
   }
 }
