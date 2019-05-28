@@ -48,7 +48,20 @@ RxPicker.init(new GlideImageLoader());
 
 - 图片单选
 ```
-RxPicker.of().start(this).subscribe(new Consumer<List<ImageItem>>() {
+RxPicker.of()
+//         这里的操作是直接打开相机拍照
+//         .clickListener(new DefaultClickListener(){
+//            @Override
+//            public void onStart(PickerFragment fragment, final Callback callback) {
+//              fragment.takePictures(new Callback() {
+//                @Override
+//                public void onCustomResult(ArrayList data) {
+//                  callback.onCustomResult(data);
+//                }
+//              });
+//            }
+//          })
+    .start(this).subscribe(new Consumer<List<ImageItem>>() {
         @Override public void accept(@NonNull List<ImageItem> imageItems) throws Exception {
           //得到结果
         }
