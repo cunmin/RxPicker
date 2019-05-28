@@ -49,7 +49,20 @@ RxPicker.init(new GlideImageLoader());
 -  Single Image
 
 ```
-RxPicker.of().start(this).subscribe(new Consumer<List<ImageItem>>() {
+RxPicker.of()
+//         So what we're going to do here is we're going to open the camera and take a picture
+//         .clickListener(new DefaultClickListener(){
+//            @Override
+//            public void onStart(PickerFragment fragment, final Callback callback) {
+//              fragment.takePictures(new Callback() {
+//                @Override
+//                public void onCustomResult(ArrayList data) {
+//                  callback.onCustomResult(data);
+//                }
+//              });
+//            }
+//          })
+.start(this).subscribe(new Consumer<List<ImageItem>>() {
         @Override public void accept(@NonNull List<ImageItem> imageItems) throws Exception {
           //Get the result
         }
