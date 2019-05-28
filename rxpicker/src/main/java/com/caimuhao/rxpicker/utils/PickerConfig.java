@@ -19,6 +19,8 @@ public class PickerConfig {
   public static final int MULTIPLE_IMG = 0x002;
   private int mode = SINGLE_IMG;
 
+  private OnClickListener onClickListener;
+
   @IntDef({ SINGLE_IMG, MULTIPLE_IMG }) @Retention(RetentionPolicy.SOURCE) @interface Mode {
   }
 
@@ -53,5 +55,16 @@ public class PickerConfig {
 
   public boolean isSingle() {
     return mode == SINGLE_IMG;
+  }
+
+  public void setOnClickListener(OnClickListener onClickListener) {
+    this.onClickListener = onClickListener;
+  }
+
+  public OnClickListener getOnClickListener() {
+    if(null==onClickListener){
+       onClickListener = new DefaultClickListener();
+    }
+    return onClickListener;
   }
 }

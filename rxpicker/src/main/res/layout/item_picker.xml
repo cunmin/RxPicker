@@ -19,7 +19,5 @@
       android:layout_alignParentRight="true"
       android:layout_marginRight="1dp"
       android:layout_marginTop="1dp"
-      android:checked="false"
-      android:clickable="false"
-      />
+      android:checked="false"/>
 </RelativeLayout>

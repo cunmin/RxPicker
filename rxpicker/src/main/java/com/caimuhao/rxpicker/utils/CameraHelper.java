@@ -29,6 +29,7 @@ public class CameraHelper {
 
         if (takePictureIntent.resolveActivity(fragment.getActivity().getPackageManager()) != null) {
             takeImageFile = new File(Environment.getExternalStorageDirectory(), "/DCIM/camera/");
+//            takeImageFile = new File(fragment.getContext().getCacheDir(), "/camera/");
             takeImageFile = createFile(takeImageFile, "IMG_", ".jpg");
             Uri uri;
             if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {

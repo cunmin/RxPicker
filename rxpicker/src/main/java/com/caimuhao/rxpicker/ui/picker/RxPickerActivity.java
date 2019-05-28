@@ -31,9 +31,11 @@ public class RxPickerActivity extends AppCompatActivity {
 
   @TargetApi(16) private void requestPermission() {
     if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
-        != PackageManager.PERMISSION_GRANTED) {
+        != PackageManager.PERMISSION_GRANTED||
+            ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            != PackageManager.PERMISSION_GRANTED) {
       ActivityCompat.requestPermissions(RxPickerActivity.this,
-          new String[] { Manifest.permission.READ_EXTERNAL_STORAGE }, READ_STORAGE_PERMISSION);
+          new String[] { Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE }, READ_STORAGE_PERMISSION);
     } else {
       setupFragment();
     }
@@ -43,9 +45,16 @@ public class RxPickerActivity extends AppCompatActivity {
       @NonNull int[] grantResults) {
     super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     if (requestCode == READ_STORAGE_PERMISSION) {
-      if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+      boolean isSuccess = true;
+      for(int result :grantResults){
+        if(result != PackageManager.PERMISSION_GRANTED){
+          isSuccess = false;
+          break;
+        }
+      }
+      if(isSuccess){
         setupFragment();
-      } else {
+      }else {
         T.show(RxPickerActivity.this, getString(R.string.permissions_error));
         finish();
       }

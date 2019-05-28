@@ -8,6 +8,7 @@ import android.content.Intent;
 import com.caimuhao.rxpicker.bean.ImageItem;
 import com.caimuhao.rxpicker.ui.picker.RxPickerActivity;
 import com.caimuhao.rxpicker.ui.picker.ResultHandlerFragment;
+import com.caimuhao.rxpicker.utils.OnClickListener;
 import com.caimuhao.rxpicker.utils.PickerConfig;
 import com.caimuhao.rxpicker.utils.RxPickerImageLoader;
 import com.caimuhao.rxpicker.utils.RxPickerManager;
@@ -125,5 +126,10 @@ public class RxPicker {
         return finalFragment.getResultSubject();
       }
     }).take(1);
+  }
+
+  public RxPicker clickListener(OnClickListener onClickListener) {
+    RxPickerManager.getInstance().setOnClickListener(onClickListener);
+    return this;
   }
 }

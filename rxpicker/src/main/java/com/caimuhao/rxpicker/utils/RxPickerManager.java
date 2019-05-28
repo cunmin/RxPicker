@@ -57,6 +57,10 @@ public class RxPickerManager {
     config.setLimit(minValue, maxValue);
   }
 
+  public void setOnClickListener(OnClickListener onClickListener) {
+    config.setOnClickListener(onClickListener);
+  }
+
   public  void display(ImageView imageView, String path, int width, int height) {
     if (imageLoader == null) {
       throw new NullPointerException("You must fist of all call 'RxPicker.init()' to initialize");

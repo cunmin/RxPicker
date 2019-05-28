@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.caimuhao.rxpicker.R;
 import com.caimuhao.rxpicker.base.AbstractFragment;
 import com.caimuhao.rxpicker.bean.FolderClickEvent;
@@ -26,17 +27,20 @@ import com.caimuhao.rxpicker.ui.adapter.PickerFragmentAdapter;
 import com.caimuhao.rxpicker.ui.preview.PreviewActivity;
 import com.caimuhao.rxpicker.utils.CameraHelper;
 import com.caimuhao.rxpicker.utils.DensityUtil;
+import com.caimuhao.rxpicker.utils.OnClickListener;
 import com.caimuhao.rxpicker.utils.PickerConfig;
 import com.caimuhao.rxpicker.utils.RxBus;
 import com.caimuhao.rxpicker.utils.RxPickerManager;
 import com.caimuhao.rxpicker.utils.T;
 import com.caimuhao.rxpicker.widget.DividerGridItemDecoration;
 import com.caimuhao.rxpicker.widget.PopWindowManager;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 
 /**
  * @author Smile
@@ -63,6 +67,8 @@ public class PickerFragment extends AbstractFragment<PickerFragmentPresenter>
   private PickerConfig config;
   private Disposable folderClicksubscribe;
   private Disposable imageItemsubscribe;
+
+  private OnClickListener.Callback callback;
 
   public static PickerFragment newInstance() {
     return new PickerFragment();
@@ -96,6 +102,12 @@ public class PickerFragment extends AbstractFragment<PickerFragmentPresenter>
     tvSelectOk.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
         selectSuccess();
+      }
+    });
+    config.getOnClickListener().onStart(this, new OnClickListener.Callback() {
+      @Override
+      public void onCustomResult(ArrayList data) {
+        handleResult(data);
       }
     });
   }
@@ -197,20 +209,26 @@ public class PickerFragment extends AbstractFragment<PickerFragmentPresenter>
     super.onActivityResult(requestCode, resultCode, data);
     //take camera
     if (resultCode == Activity.RESULT_OK && requestCode == CAMERA_REQUEST) {
-      handleCameraResult();
+      handleCameraResult(callback);
     }
   }
 
-  private void handleCameraResult() {
+  private void handleCameraResult(OnClickListener.Callback callback) {
     File file = CameraHelper.getTakeImageFile();
     CameraHelper.scanPic(getActivity(), file);
+    ImageItem item = new ImageItem(0, file.getAbsolutePath(), file.getName(), System.currentTimeMillis());
+    if(null != callback){
+      ArrayList<ImageItem> result = new ArrayList<>();
+      result.add(item);
+      callback.onCustomResult(result);
+      this.callback = null;
+      return;
+    }
     for (ImageFolder imageFolder : allFolder) {
       imageFolder.setChecked(false);
     }
     ImageFolder allImageFolder = allFolder.get(0);
     allImageFolder.setChecked(true);
-    ImageItem item =
-        new ImageItem(0, file.getAbsolutePath(), file.getName(), System.currentTimeMillis());
     allImageFolder.getImages().add(0, item);
     RxBus.singleton().post(new FolderClickEvent(0, allImageFolder));
   }
@@ -245,7 +263,7 @@ public class PickerFragment extends AbstractFragment<PickerFragmentPresenter>
         != PackageManager.PERMISSION_GRANTED) {
       requestPermissions(new String[] { Manifest.permission.CAMERA }, CAMERA_PERMISSION);
     } else {
-      takePictures();
+      onClickCamera();
     }
   }
 
@@ -254,14 +272,19 @@ public class PickerFragment extends AbstractFragment<PickerFragmentPresenter>
     super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     if (requestCode == CAMERA_PERMISSION) {
       if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-        takePictures();
+        onClickCamera();
       } else {
         T.show(getContext(),getString(R.string.permissions_error));
       }
     }
   }
 
-  private void takePictures() {
+  public void takePictures() {
+    takePictures(null);
+  }
+
+  public void takePictures(OnClickListener.Callback callback) {
+    this.callback = callback;
     CameraHelper.take(PickerFragment.this, CAMERA_REQUEST);
   }
 
@@ -271,8 +294,17 @@ public class PickerFragment extends AbstractFragment<PickerFragmentPresenter>
       if (Build.VERSION.SDK_INT >= 23) {
         requestPermission();
       } else {
-        takePictures();
+        onClickCamera();
       }
     }
+  }
+
+  private void onClickCamera(){
+    config.getOnClickListener().onCameraClick(PickerFragment.this, new OnClickListener.Callback<ImageItem>() {
+      @Override
+      public void onCustomResult(ArrayList<ImageItem> data) {
+        handleResult(data);
+      }
+    });
   }
 }

@@ -59,6 +59,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
           .single(false)
           .camera(true)
           .limit(3, 9)
+//          .clickListener(new DefaultClickListener(){
+//            @Override
+//            public void onStart(PickerFragment fragment, final Callback callback) {
+//              fragment.takePictures(new Callback() {
+//                @Override
+//                public void onCustomResult(ArrayList data) {
+//                  callback.onCustomResult(data);
+//                }
+//              });
+//            }
+//          })
           .start(this)
           .subscribe(new Consumer<List<ImageItem>>() {
             @Override public void accept(@NonNull List<ImageItem> imageItems) throws Exception {

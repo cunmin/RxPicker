@@ -1,5 +1,9 @@
 package com.caimuhao.rxpicker.bean;
 
+import android.view.View;
+
+import com.caimuhao.rxpicker.R;
+
 import java.io.Serializable;
 
 /**
@@ -7,7 +11,7 @@ import java.io.Serializable;
  * @time 2017/4/19  上午11:50
  * @desc ${TODD}
  */
-public class ImageItem implements Serializable, Comparable<ImageItem> {
+public class ImageItem implements Serializable, Comparable<ImageItem> ,Item{
 
   /**
    * Image id.
@@ -60,6 +64,7 @@ public class ImageItem implements Serializable, Comparable<ImageItem> {
     this.name = name;
   }
 
+  @Override
   public String getPath() {
     return path;
   }
@@ -74,5 +79,20 @@ public class ImageItem implements Serializable, Comparable<ImageItem> {
       return Integer.MAX_VALUE;
     } else if (time < -Integer.MAX_VALUE) return -Integer.MAX_VALUE;
     return (int) time;
+  }
+
+  @Override
+  public int getLayoutId() {
+    return R.layout.item_picker;
+  }
+
+  @Override
+  public int getType() {
+    return TYPE_IMAGE;
+  }
+
+  @Override
+  public void onClick(View v) {
+
   }
 }
